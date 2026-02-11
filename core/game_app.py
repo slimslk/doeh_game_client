@@ -1,7 +1,7 @@
 import asyncio
 
 from game_service import GameService
-from websocket_service import IWebsocketService
+from ws.websocket_service import IWebsocketService
 
 
 class GameApp:

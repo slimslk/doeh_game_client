@@ -1,12 +1,12 @@
 import pygame
 
-from game_map import GameMap
+from core.game_map import GameMap
 from game_screen import GameScreen
 from login_screen import LoginScreen
-from player import Player
-from websocket_service import IWebsocketService
-from config import game_field_width, game_field_height
-import controller
+from core.player import Player
+from ws.websocket_service import IWebsocketService
+from core.config.config import game_field_width, game_field_height
+from core import controller
 
 
 class GameService:
@@ -61,7 +61,7 @@ class GameService:
 
             await self._receive_updates()
 
-            #-------- Game Screen --------
+            # -------- Game Screen --------
             while not self.game_screen.is_finished:
                 self.game_screen.render_game_window()
                 for event in pygame.event.get():

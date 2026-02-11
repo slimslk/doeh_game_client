@@ -1,7 +1,7 @@
 import pygame
 
-from game_map import GameMap
-from config import game_field_width, game_field_height, key_mapping, game_field_font_size
+from core.game_map import GameMap
+from core.config.config import game_field_width, game_field_height, key_mapping, game_field_font_size
 
 
 class GameScreen:

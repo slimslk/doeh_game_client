@@ -1,14 +1,52 @@
+import httpx
+import pygame
 
-from game_app import GameApp
-from game_service import GameService
-from websocket_service import WebsocketServiceImpl
-from config import server_url, screen_resolution_width, screen_resolution_height, screen_font_size
+from connector.server_connector import ServerConnector
+from core.context import AppContext
+from core.screen_flow import ScreenFlow
 
-if "__main__" == __name__:
+from screens.login_screen import LoginScreen
+from screens.character_select_screen import CharacterSelectScreen
+from screens.register_screen import RegisterScreen
+from screens.start_screen import StartScreen
 
-    websocket_service = WebsocketServiceImpl(server_url)
+running = True
 
-    game_service = GameService(screen_resolution_width, screen_resolution_height, screen_font_size, 30, websocket_service)
+client = httpx.Client(timeout=10.0, trust_env=False)
+connector = ServerConnector(client)
 
-    app = GameApp(websocket_service, game_service)
-    app.run()
+pygame.init()
+screen = pygame.display.set_mode((800, 600))
+font = pygame.font.Font(None, 32)
+clock = pygame.time.Clock()
+
+context = AppContext()
+context.connector = connector
+
+flow = ScreenFlow(screen, font)
+flow.set_context(context)
+
+flow.register("start", lambda s, f, c: StartScreen(s, f, c))
+flow.register("login", lambda s, f, c: LoginScreen(s, f, c))
+flow.register("login_success", lambda s, f, c: CharacterSelectScreen(s, f, c))
+flow.register("register", lambda s, f, c: RegisterScreen(s, f, c))
+flow.register("logout", lambda s, f, c: LoginScreen(s, f, c))
+
+flow.start()
+
+
+while running:
+    try:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            else:
+                flow.handle_event(event)
+
+        flow.draw()
+        clock.tick(60)
+    except KeyboardInterrupt:
+        connector.close()
+        running = False
+
+pygame.quit()
