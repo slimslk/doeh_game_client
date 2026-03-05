@@ -25,6 +25,11 @@ class Player:
         self.defence = defence,
         self.is_dead = False
 
+    def __str__(self):
+        return (f'{self.user_id}: {self.name},'
+                f' {self.map_id}, {self.health}, {self.energy},'
+                f' {self.hungry}, {self.position}, {self.direction}')
+
     def update(self, player_stats: dict):
         user_id = player_stats.get("id")
         if user_id is not None:

@@ -1,5 +1,6 @@
 {
-  "server_url": "ws://3.120.147.128:80/ws",
+  "server_url": "http://3.120.147.128:80",
+  "ws_url": "ws://3.120.147.128:80/ws",
   "display_settings": {
     "screen_resolution_width": 1200,
     "screen_resolution_height": 800,

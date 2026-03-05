@@ -4,6 +4,7 @@ with open("config.json", "r") as config:
     config = json.load(config)
 
 server_url = config["server_url"]
+ws_url = config["ws_url"]
 display_settings = config["display_settings"]
 
 screen_resolution_width = display_settings.get("screen_resolution_width")
