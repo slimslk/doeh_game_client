@@ -8,5 +8,5 @@ dependencies = [
     "httpx>=0.28.1",
     "pydantic>=2.12.5",
     "pygame>=2.6.1",
-    "websockets>=16.0",
+    "websocket-client>=1.9.0",
 ]

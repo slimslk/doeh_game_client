@@ -3,6 +3,8 @@ from typing import Any, Literal
 
 from httpx import Client, HTTPError, NetworkError, TimeoutException
 
+from errors.response_errors import UserNotFoundError, AuthenticationError, DuplicateUserError
+
 HttpMethodType = Literal["GET", "POST", "PATCH", "PUT", "DELETE"]
 
 
@@ -49,4 +51,9 @@ class HTTPBaseConnector(ABC):
         self._client.close()
 
     def _raise_for_status(self, response) -> None:
-        print(response)
+        if response.status_code == 404:
+            raise UserNotFoundError
+        if response.status_code == 401:
+            raise AuthenticationError
+        if response.status_code == 409:
+            raise DuplicateUserError

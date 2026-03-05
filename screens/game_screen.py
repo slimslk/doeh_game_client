@@ -1,27 +1,41 @@
 import pygame
 
+from core import controller
+from core.context import AppContext
 from core.game_map import GameMap
+from screens.base_screen import BaseScreen
 from core.config.config import game_field_width, game_field_height, key_mapping, game_field_font_size
 
 
-class GameScreen:
-    def __init__(self, screen, font, player, game_map: GameMap):
-
-        self.game_field_font_size = game_field_font_size
-        self.screen = screen
-        self.font = font
+class GameScreen(BaseScreen):
+    def __init__(self, screen, font, context: AppContext, player, game_map: GameMap):
+        super().__init__(screen, font, context)
+        self.context = context
         self.player = player
-
         self.game_map = game_map
 
-        self.is_finished = False
+        self.game_field_font_size = game_field_font_size
 
         self.display_map_width = game_field_width
         self.display_map_height = game_field_height
         self.player_coord = (self.display_map_width // 2, self.display_map_height // 2)
         self.actions = key_mapping
+        self.is_created = False
 
-    def render_game_window(self):
+        self.player.name = self.context.selected_character
+
+    def handle_event(self, event):
+        action = controller.handle_event(event)
+        if action == "exit":
+            return {"event": "logout"}
+        if self.player.is_dead:
+            return {"event": "logout"}  # TODO Add dead screen instead logout
+        if action and isinstance(action, dict):
+            self.context.ws.send(action)
+
+        # await self._receive_updates()
+
+    def draw(self):
         self.screen.fill((0, 0, 0))
         player_x, player_y = self.player.position
         # --- Top status line ---
@@ -62,7 +76,10 @@ class GameScreen:
                         break
                     rmp_x = render_map_start_position_x + x
                     rmp_y = render_map_start_position_y + y
-                    char, color = self.game_map.get_map()[rmp_x][rmp_y]
+                    item_on_position = self.game_map.get_map()[rmp_x][rmp_y]
+                    # print(f"Here is Item On position: {item_on_position}")
+                    char, color = item_on_position
+
                 except IndexError:
                     print(x, y)
                     raise IndexError

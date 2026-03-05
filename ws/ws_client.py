@@ -1,30 +1,58 @@
-import asyncio
-import websockets
 import json
+import threading
+import websocket
 
 
-class NetworkClient:
-    def __init__(self, server_url):
-        self.server_url = server_url
-        self.websocket = None
+class WSClient:
+    def __init__(self, url: str, token: str, on_message):
+        self.url = url
+        self.token = token
+        self.on_message = on_message
 
-    async def connect(self):
-        self.websocket = await websockets.connect(self.server_url)
+        self.ws = None
+        self.thread = None
+        self.running = False
+        self.send_lock = threading.Lock()
 
-    async def send(self, data: dict):
-        if self.websocket:
-            await self.websocket.send(json.dumps(data))
+    def connect(self):
+        headers = [f"Authorization: {self.token}"]
 
-    async def receive(self):
-        if not self.websocket:
-            return None
+        self.ws = websocket.WebSocket()
+        self.ws.connect(self.url, header=headers)
+
+        self.running = True
+        self.thread = threading.Thread(target=self._listen, daemon=True)
+        self.thread.start()
+
+    def _listen(self):
+        while self.running:
+            try:
+                data = self.ws.recv()
+                if data:
+                    message = json.loads(data)
+                    self.on_message(message)
+            except websocket.WebSocketConnectionClosedException:
+                print("WS connection closed")
+                self.running = False
+            except Exception as e:
+                print("WS receive error:", e)
+                self.running = False
+
+    def send(self, data: dict):
+        if not self.ws or not self.running:
+            return
 
         try:
-            msg = await asyncio.wait_for(self.websocket.recv(), timeout=0.05)
-            return json.loads(msg)
-        except asyncio.TimeoutError:
-            return None
+            with self.send_lock:
+                self.ws.send(json.dumps(data))
+        except Exception as e:
+            print("WS send error:", e)
 
-    async def close(self):
-        if self.websocket:
-            await self.websocket.close()
+    def close(self):
+        self.running = False
+        try:
+            if self.ws:
+                self.ws.close()
+        except Exception:
+            print("Websocket connection closed.")
+            pass

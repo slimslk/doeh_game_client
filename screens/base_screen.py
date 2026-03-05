@@ -20,13 +20,10 @@ class BaseScreen(ABC):
 
     @abstractmethod
     def draw(self):
-        """Рисует экран"""
         pass
 
     def on_enter(self):
-        """Вызывается при показе экрана"""
         pass
 
     def on_exit(self):
-        """Вызывается при уходе с экрана"""
         pass

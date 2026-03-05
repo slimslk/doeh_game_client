@@ -9,9 +9,8 @@ class CharacterSelectScreen(BaseScreen):
         super().__init__(screen, font, context)
         chars = context.connector.get_characters()
 
-        # временные данные
-        if not context.characters:
-            context.characters = ["Warrior", "Mage", "Rogue"]
+        if chars:
+            context.characters = [char.get("name", "Default") for char in chars]
 
         self.selected = 0
         self.new_name = ""
@@ -27,14 +26,14 @@ class CharacterSelectScreen(BaseScreen):
         elif event.key == pygame.K_DOWN:
             self.selected = min(len(self.context.characters) - 1, self.selected + 1)
 
-        elif event.key == pygame.K_RETURN:
+        elif event.key == pygame.K_RETURN and not self.create_mode:
             self.context.selected_character = self.context.characters[self.selected]
             return {
-                "event": "character_selected",
-                "data": {"selected_character": self.context.selected_character}
+                "event": "connect",
+                "data": {"data": "select"}
             }
 
-        elif event.key == pygame.K_n:
+        elif event.key == pygame.K_n and not self.create_mode:
             self.create_mode = True
 
         elif event.key == pygame.K_BACKSPACE and self.create_mode:
@@ -45,9 +44,11 @@ class CharacterSelectScreen(BaseScreen):
 
         elif self.create_mode:
             if event.key == pygame.K_RETURN and self.new_name:
-                self.context.characters.append(self.new_name)
-                self.new_name = ""
-                self.create_mode = False
+                self.context.selected_character = self.new_name
+                return {
+                    "event": "connect",
+                    "data": {"data": "create"}
+                }
             else:
                 self.new_name += event.unicode
 
@@ -55,30 +56,15 @@ class CharacterSelectScreen(BaseScreen):
         self.screen.fill((0, 0, 0))
         w, h = self.screen.get_size()
 
-        # список персонажей
         for i, char in enumerate(self.context.characters):
             color = (0, 200, 0) if i == self.selected else (200, 200, 200)
             text = self.font.render(char, True, color)
             self.screen.blit(text, (50, 50 + i * 30))
-
-        # статистика (заглушка)
-        stats = [
-            f"Name: {self.context.characters[self.selected]}",
-            "HP: 100",
-            "STR: 10",
-            "AGI: 8"
-        ]
-
-        for i, line in enumerate(stats):
-            t = self.font.render(line, True, (180, 180, 180))
-            self.screen.blit(t, (300, 60 + i * 30))
-
-        # создание персонажа
-        create = self.font.render("N - New character:", True, (150, 150, 150))
+        create = self.font.render("n - New character:", True, (150, 150, 150))
         self.screen.blit(create, (50, h - 80))
-
-        name = self.font.render(self.new_name, True, (255, 255, 255))
-        pygame.draw.rect(self.screen, (80, 80, 80), (220, h - 85, 200, 30), 2)
-        self.screen.blit(name, (225, h - 80))
+        if self.create_mode:
+            name = self.font.render(self.new_name, True, (255, 255, 255))
+            pygame.draw.rect(self.screen, (80, 80, 80), (w/2-100, h/2 - 85, 200, 30), 2)
+            self.screen.blit(name, (w/2-100, h/2 - 80))
 
         pygame.display.flip()

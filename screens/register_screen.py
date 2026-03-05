@@ -2,6 +2,7 @@ import httpx
 import pygame
 
 from connector.server_connector import ServerConnector
+from errors.response_errors import DuplicateUserError, DefaultResponseError
 from screens.base_screen import BaseScreen
 
 
@@ -37,11 +38,19 @@ class RegisterScreen(BaseScreen):
             elif self.password_text != self.repeat_text:
                 self.error = "Passwords do not match"
             else:
-                response = self.context.connector.register_user(self.login_text, self.password_text)
-                return {
-                    "event": "login_success",
-                    "data": response,
-                }
+                try:
+                    response = self.context.connector.register_user(self.login_text, self.password_text)
+                    self.context.token = response.get("Authorization")
+                    self.context.user = self.login_text
+                    return {
+                        "event": "login_success",
+                        "data": response,
+                    }
+                except DefaultResponseError as e:
+                    if e.__class__.__name__ == "DuplicateUserError":
+                        self.error = "User already exists"
+                    else:
+                        self.error = "Opps. Something went wrong"
 
         elif event.key == pygame.K_ESCAPE:
             return {"event": "start"}

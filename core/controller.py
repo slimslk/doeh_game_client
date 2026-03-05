@@ -1,5 +1,5 @@
 import pygame
-from config import key_mapping
+from core.config.config import key_mapping
 
 keys = key_mapping
 

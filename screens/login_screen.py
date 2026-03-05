@@ -2,6 +2,7 @@ import httpx
 import pygame
 
 from connector.server_connector import ServerConnector
+from errors.response_errors import DefaultResponseError, UserNotFoundError, AuthenticationError
 from screens.base_screen import BaseScreen
 
 
@@ -35,11 +36,20 @@ class LoginScreen(BaseScreen):
 
         elif event.key == pygame.K_RETURN:
             if self.login_text and self.password_text:
-                response = self.context.connector.register_user(self.login_text, self.password_text)
-                return {
-                    "event": "login_success",
-                    "data": response,
-                }
+                try:
+                    response = self.context.connector.login(self.login_text, self.password_text)
+                    self.context.token = response.get("Authorization")
+                    self.context.user = self.login_text
+                    return {
+                        "event": "login_success",
+                        "data": response,
+                    }
+                except DefaultResponseError as e:
+                    if e.__class__.__name__ in ["AuthenticationError", "UserNotFoundError"]:
+                        self.error = "Invalid credentials"
+                    else:
+                        self.error = "Opps. Something went wrong"
+
             else:
                 self.error = "Login and password required"
 
