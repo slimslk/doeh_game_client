@@ -1,4 +1,4 @@
-# NPC Crawler
+# DoEH: Domains of Endless Hunger
 
 ![Python](https://img.shields.io/badge/python-3.12-blue)
 ![uv](https://img.shields.io/badge/package%20manager-uv-purple)
