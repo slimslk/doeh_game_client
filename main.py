@@ -16,12 +16,14 @@ from screens.logout_screen import LogoutScreen
 from screens.register_screen import RegisterScreen
 from screens.start_screen import StartScreen
 
+from core.config.config import screen_resolution_width, screen_resolution_height
+
 running = True
 
 client = httpx.Client(timeout=10.0, trust_env=False)
 
 pygame.init()
-screen = pygame.display.set_mode((1200, 800))
+screen = pygame.display.set_mode((screen_resolution_width, screen_resolution_height))
 font = pygame.font.Font(None, 32)
 clock = pygame.time.Clock()
 

@@ -1,6 +1,8 @@
 {
-  "server_url": "http://3.120.147.128:80",
-  "ws_url": "ws://3.120.147.128:80/ws",
+  "server_url": "http://doeh.dimmid.net:80",
+  "ws_url": "ws://doeh.dimmid.net:80/ws",
+  "max_messages": 1000,
+
   "display_settings": {
     "screen_resolution_width": 1200,
     "screen_resolution_height": 800,
@@ -23,7 +25,7 @@
       "action": "move_right"
     },
     "e": {
-      "action": "take_item"
+      "action": "interact"
     },
     "f": {
       "action": "attack"

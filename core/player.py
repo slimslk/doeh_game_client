@@ -1,3 +1,8 @@
+from collections import deque
+from core.config.config import max_messages
+from core.greeting_messages import get_greeting_message
+
+
 class Player:
     def __init__(self, user_id="Unknown",
                  name="Void",
@@ -24,6 +29,8 @@ class Player:
         self.attack_damage = attack_damage
         self.defence = defence,
         self.is_dead = False
+        self.messages = deque(maxlen=max_messages)
+        self.messages.append(get_greeting_message())
 
     def __str__(self):
         return (f'{self.user_id}: {self.name},'
@@ -70,3 +77,7 @@ class Player:
         defence = player_stats.get("defence")
         if defence is not None:
             self.defence = defence
+        messages = player_stats.get("messages")
+        print("Message in Player", messages)
+        if messages:
+            self.messages.extend(messages)

@@ -8,6 +8,8 @@ from core.config.config import game_field_width, game_field_height, key_mapping,
 
 
 class GameScreen(BaseScreen):
+    _UI_OFFSET = 5
+
     def __init__(self, screen, font, context: AppContext, player, game_map: GameMap):
         super().__init__(screen, font, context)
         self.context = context
@@ -33,60 +35,77 @@ class GameScreen(BaseScreen):
         if action and isinstance(action, dict):
             self.context.ws.send(action)
 
-        # await self._receive_updates()
-
     def draw(self):
         self.screen.fill((0, 0, 0))
-        player_x, player_y = self.player.position
-        # --- Top status line ---
+        px, py = self.player.position
+
+        # --- 1. Top status line ---
         top_text = f"Player: {self.player.name} || Inventory: {'|'.join(self.player.inventory)}"
         top_surface = self.font.render(top_text, True, (255, 255, 255))
         self.screen.blit(top_surface, (0, 0))
 
-        # --- Map rendering ---
-        padding_x = 2  # horizontal padding between cells
-        padding_y = 2  # vertical padding between cells
-        cell_width = self.game_field_font_size + padding_x
-        cell_height = self.game_field_font_size + padding_y
-        map_width, map_height = self.game_map.get_map_size()
+        # --- 2. Camera & Map Boundary Logic ---
+        map_w, map_h = self.game_map.get_map_size()
+        ui_height_offset = top_surface.get_height() + self._UI_OFFSET
 
-        # Start drawing map below top status line
-        map_offset_y = top_surface.get_height() + 2  # extra 2 px space
-        render_map_start_position_x = player_x - self.display_map_height // 2
-        render_map_end_position_x = player_x + self.display_map_height // 2
-        render_map_start_position_y = player_y - self.display_map_width // 2
-        render_map_end_position_y = player_y + self.display_map_width // 2
+        # Define cell dimensions once
+        padding = 2
+        cell_w = self.game_field_font_size + padding
+        cell_h = self.game_field_font_size + padding
 
-        if render_map_end_position_x > map_height:
-            render_map_start_position_x = render_map_start_position_x - (render_map_end_position_x - map_height)
-        if render_map_end_position_y > map_width:
-            render_map_start_position_y = render_map_start_position_y - (render_map_end_position_y - map_width)
+        # Logic for Horizontal (X)
+        if map_w <= self.display_map_height:
+            cam_x = 0
+            render_w = map_w
+            screen_offset_x = (self.display_map_height - map_w) * cell_w // 2
+        else:
+            # Standard centering logic: Player minus half-screen
+            cam_x = px - (self.display_map_height // 2)
+            # Clamp to bounds [0, map_w - display_w]
+            cam_x = max(0, min(cam_x, map_w - self.display_map_height))
+            render_w = self.display_map_height
+            screen_offset_x = 0
 
-        if render_map_start_position_x < 0:
-            render_map_start_position_x = 0
-        if render_map_start_position_y < 0:
-            render_map_start_position_y = 0
+        # Logic for Vertical (Y)
+        if map_h <= self.display_map_width:
+            cam_y = 0
+            render_h = map_h
+            screen_offset_y = 0
+        else:
+            cam_y = py - (self.display_map_width // 2)
+            cam_y = max(0, min(cam_y, map_h - self.display_map_width))
+            render_h = self.display_map_width
+            screen_offset_y = 0
 
-        for y in range(self.display_map_width):
-            if render_map_start_position_y + y > map_width - 1:
-                break
-            for x in range(self.display_map_height):
-                try:
-                    if render_map_start_position_x + x > map_height - 1:
-                        break
-                    rmp_x = render_map_start_position_x + x
-                    rmp_y = render_map_start_position_y + y
-                    item_on_position = self.game_map.get_map()[rmp_x][rmp_y]
-                    # print(f"Here is Item On position: {item_on_position}")
-                    char, color = item_on_position
+        # --- 3. Rendering Grid ---
+        grid = self.game_map.get_map()
 
-                except IndexError:
-                    print(x, y)
-                    raise IndexError
-                img = self.font.render(char, True, color)
-                self.screen.blit(img, (y * cell_width, map_offset_y + x * cell_height))
+        for s_x in range(render_w):
+            for s_y in range(render_h):
+                # Map coordinates
+                m_x = cam_x + s_x
+                m_y = cam_y + s_y
 
-        # --- Bottom stats line ---
+                # Bounds safety check
+                if 0 <= m_x < map_w and 0 <= m_y < map_h:
+                    try:
+                        # Access map data (using grid[x][y] as per your previous shift)
+                        char, color = grid[m_x][m_y]
+
+                        # # Check for player
+                        # if m_x == px and m_y == py:
+                        #     char, color = "@", (255, 255, 0)
+
+                        img = self.font.render(char, True, color)
+
+                        # Calculate exact screen position
+                        draw_x = ui_height_offset + screen_offset_x + (s_x * cell_w)
+                        draw_y = ui_height_offset + screen_offset_y + (s_y * cell_h)
+                        self.screen.blit(img, (draw_y, draw_x))
+                    except IndexError:
+                        continue
+
+        # --- 4. Bottom stats line ---
         stats_text = (f"HP: {self.player.health}"
                       f" ST: {self.player.energy}"
                       f" SAT: {self.player.hungry}"
@@ -94,7 +113,13 @@ class GameScreen(BaseScreen):
                       f" AD: {self.player.attack_damage}"
                       f" DEF: {self.player.defence}")
         stats_surface = self.font.render(stats_text, True, (255, 255, 0))
-        self.screen.blit(stats_surface, (0, map_offset_y + self.display_map_height * cell_height + 2))
+        self.screen.blit(stats_surface, (0, top_surface.get_height() + self._UI_OFFSET * 2 +
+                                         self.display_map_height * (self.game_field_font_size + padding)))
+        message_test = f"{self.player.messages[-1]}"
+        message_surface = self.font.render(message_test, True, (255, 255, 0))
+        self.screen.blit(message_surface, (0, top_surface.get_height() + self._UI_OFFSET * 2 +
+                                           self.display_map_height * (self.game_field_font_size + padding) +
+                                           stats_surface.get_height()))
 
         pygame.display.flip()
 

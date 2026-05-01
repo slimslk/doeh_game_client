@@ -8,4 +8,6 @@ game_objects = {
     "DUMMY": ("8", (139, 69, 19)),
     "CORPSE": ("*", (64, 64, 64)),
     "DEFAULT": (".", (125, 125, 125)),
+    "SIMPLE_CHEST": ("C", (125, 12, 204)),
+    "OPENED_SIMPLE_CHEST": ("C", (100, 100, 100)),
 }
