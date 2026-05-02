@@ -5,7 +5,10 @@ from screens.base_screen import BaseScreen
 
 class LogoutScreen(BaseScreen):
     def handle_event(self, event):
-        self.context.ws.close()
+        if self.context.ws:
+            self.context.ws.close()
+        if self.context.characters:
+            self.context.characters = []
 
         return {"event": "start"}
 

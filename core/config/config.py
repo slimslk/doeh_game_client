@@ -1,5 +1,7 @@
 import json
 
+CONFIG_FILE_NAME = "config.json"
+
 
 def calculate_game_field_size(sr_w, sr_h, gf_font):
     width = int(sr_w / gf_font) - 10
@@ -9,7 +11,7 @@ def calculate_game_field_size(sr_w, sr_h, gf_font):
     return width, height
 
 
-with open("config.json", "r") as config:
+with open(CONFIG_FILE_NAME, "r") as config:
     config = json.load(config)
 
 server_url = config["server_url"]
