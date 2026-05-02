@@ -26,7 +26,6 @@ class GameService:
         self.font.get_height()
 
     def apply_server_update(self, message: dict):
-        print("Messages for update", message)
         with self.state_lock:
             if message.get("game_updates"):
                 self.update_game_state(message["game_updates"])
@@ -36,8 +35,6 @@ class GameService:
                 self.update_location(message["location_updates"])
 
     def update_player_stats(self, player_data):
-        # if player_data["messages"]:
-        #     print(player_data)
         self.player.update(player_data)
 
     def update_location(self, location_updates):

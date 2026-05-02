@@ -78,6 +78,5 @@ class Player:
         if defence is not None:
             self.defence = defence
         messages = player_stats.get("messages")
-        print("Message in Player", messages)
         if messages:
             self.messages.extend(messages)

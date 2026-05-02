@@ -2,7 +2,6 @@
   "server_url": "http://doeh.dimmid.net:80",
   "ws_url": "ws://doeh.dimmid.net:80/ws",
   "max_messages": 1000,
-
   "display_settings": {
     "screen_resolution_width": 1200,
     "screen_resolution_height": 800,
@@ -12,26 +11,43 @@
     "game_field_font_size": 14
   },
   "key_mapping": {
+    "z": {
+      "action": "move",
+      "params": [
+        [
+          -1,
+          -1
+        ],
+        3
+      ]
+    },
     "w": {
-      "action": "move_up"
+      "action": "move_up",
+      "params": []
     },
     "s": {
-      "action": "move_down"
+      "action": "move_down",
+      "params": []
     },
     "a": {
-      "action": "move_left"
+      "action": "move_left",
+      "params": []
     },
     "d": {
-      "action": "move_right"
+      "action": "move_right",
+      "params": []
     },
     "e": {
-      "action": "interact"
+      "action": "interact",
+      "params": []
     },
     "f": {
-      "action": "attack"
+      "action": "attack",
+      "params": []
     },
     "p": {
-      "action": "skip_turn"
+      "action": "skip_turn",
+      "params": []
     },
     "1": {
       "action": "use_item",
@@ -62,7 +78,41 @@
       "params": [
         4
       ]
+    },
+    "q": {
+      "action": "awake",
+      "params": []
+    },
+    "m": {
+      "action": "move_up",
+      "params": [
+        2,
+        2
+      ]
+    },
+    "v": {},
+    "x": {
+      "action": "move",
+      "params": [
+        1,
+        1
+      ]
+    },
+    "b": {
+      "action": "move_up"
+    },
+    "c": {
+      "action": "move_up",
+      "params": [
+        1
+      ]
+    },
+    "n": {
+      "action": "ove_up",
+      "params": [
+        1,
+        2
+      ]
     }
   }
 }
-
