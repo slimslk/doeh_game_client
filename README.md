@@ -36,8 +36,8 @@ The client allows players to connect seamlessly to the game and experience the s
 If you already have **Python 3.12** and **uv** installed, run:
 
 ```bash
-git clone https://github.com/slimslk/npc_crawler_client.git
-cd npc_crawler_client
+git clone git@github.com:slimslk/doeh_game_client.git
+cd doeh_game_client
 uv sync
 uv run main.py
 ```
@@ -96,8 +96,8 @@ uv --version
 ## 3. Clone the Repository
 
 ```bash
-git clone https://github.com/slimslk/npc_crawler_client.git
-cd npc_crawler_client
+git clone https://github.com/slimslk/doeh_game_client.git
+cd doeh_game_client
 ```
 
 ---
