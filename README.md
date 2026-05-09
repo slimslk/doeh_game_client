@@ -2,7 +2,6 @@
 
 ![Python](https://img.shields.io/badge/python-3.12-blue)
 ![uv](https://img.shields.io/badge/package%20manager-uv-purple)
-![License](https://img.shields.io/badge/license-MIT-green)
 
 ## Project Description
 
@@ -24,7 +23,6 @@ The client allows players to connect seamlessly to the game and experience the s
 * [Requirements](#requirements)
 * [Installation](#installation)
 * [Running the Application](#running-the-application)
-* [Project Structure](#project-structure)
 * [Development](#development)
 * [License](#license)
 * [Troubleshooting](#troubleshooting)
@@ -149,41 +147,13 @@ uv sync
 
 # License
 
-This project is licensed under the **MIT License**.
+**Copyright © 2024-2026 Dmytro Kuzavkov (slimslk). All rights reserved.**
 
-**What this means:**
+This software and its associated files are **proprietary** and confidential. 
+Unauthorized copying, distribution, or modification of this code, via any medium, is strictly prohibited. 
 
-* You can use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the project.
-* You must include the original copyright notice and license in all copies.
-* There are **no restrictions** on commercial or private use.
-
-This makes it perfect for personal open-source projects or sharing with others freely.
-
-Full MIT License text:
-
-```text
-MIT License
-
-Copyright (c) 2026 Your Name
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
+The source code is provided on GitHub for **portfolio review and educational purposes only**. 
+If you wish to use any part of this project for commercial purposes or public distribution, please contact the author at d.kuzavkov@gmail.com.
 
 ---
 
