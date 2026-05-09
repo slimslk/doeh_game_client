@@ -3,6 +3,7 @@ import pygame
 from screens.base_screen import BaseScreen
 from ws.ws_client import WSClient
 from core.config import config
+from screens.const.screen_constants import LOGOUT_SCREEN, GAME_SCREEN
 
 
 class ConnectingScreen(BaseScreen):
@@ -23,8 +24,8 @@ class ConnectingScreen(BaseScreen):
             if self.context.data == "select":
                 ws.send({"action": "get_player", "params": [self.context.selected_character]})
         else:
-            return {"event": "logout"}
-        return {"event": "game"}
+            return {"event": LOGOUT_SCREEN}
+        return {"event": GAME_SCREEN}
 
     def draw(self):
         self.screen.fill((0, 0, 0))

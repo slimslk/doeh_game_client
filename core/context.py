@@ -8,3 +8,4 @@ class AppContext:
         self.connector = None
         self.game_service = None
         self.data = None
+        self.popup_manager = None

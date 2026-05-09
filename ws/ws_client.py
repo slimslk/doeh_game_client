@@ -32,7 +32,6 @@ class WSClient:
                     message = json.loads(data)
                     self.on_message(message)
             except websocket.WebSocketConnectionClosedException:
-                print("WS connection closed")
                 self.running = False
             except Exception as e:
                 print("WS receive error:", e)

@@ -1,9 +1,9 @@
-import httpx
 import pygame
 
-from connector.server_connector import ServerConnector
-from errors.response_errors import DuplicateUserError, DefaultResponseError
+from errors.response_errors import DefaultResponseError
 from screens.base_screen import BaseScreen
+
+from screens.const.screen_constants import CHARACTER_SCREEN, START_SCREEN
 
 
 class RegisterScreen(BaseScreen):
@@ -43,7 +43,7 @@ class RegisterScreen(BaseScreen):
                     self.context.token = response.get("Authorization")
                     self.context.user = self.login_text
                     return {
-                        "event": "login_success",
+                        "event": CHARACTER_SCREEN,
                         "data": response,
                     }
                 except DefaultResponseError as e:
@@ -53,7 +53,7 @@ class RegisterScreen(BaseScreen):
                         self.error = "Opps. Something went wrong"
 
         elif event.key == pygame.K_ESCAPE:
-            return {"event": "start"}
+            return {"event": START_SCREEN}
 
         else:
             self._add_char(event.unicode)

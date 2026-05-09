@@ -2,6 +2,7 @@ import pygame
 
 from core.context import AppContext
 from screens.base_screen import BaseScreen
+from screens.const.screen_constants import CONNECT_SCREEN, LOGOUT_SCREEN
 
 
 class CharacterSelectScreen(BaseScreen):
@@ -29,7 +30,7 @@ class CharacterSelectScreen(BaseScreen):
         elif event.key == pygame.K_RETURN and not self.create_mode:
             self.context.selected_character = self.context.characters[self.selected]
             return {
-                "event": "connect",
+                "event": CONNECT_SCREEN,
                 "data": {"data": "select"}
             }
 
@@ -40,13 +41,13 @@ class CharacterSelectScreen(BaseScreen):
             self.new_name = self.new_name[:-1]
 
         elif event.key == pygame.K_ESCAPE:
-            return {"event": "logout"}
+            return {"event": LOGOUT_SCREEN}
 
         elif self.create_mode:
             if event.key == pygame.K_RETURN and self.new_name:
                 self.context.selected_character = self.new_name
                 return {
-                    "event": "connect",
+                    "event": CONNECT_SCREEN,
                     "data": {"data": "create"}
                 }
             else:

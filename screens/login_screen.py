@@ -1,9 +1,10 @@
-import httpx
+
 import pygame
 
-from connector.server_connector import ServerConnector
-from errors.response_errors import DefaultResponseError, UserNotFoundError, AuthenticationError
+from errors.response_errors import DefaultResponseError
 from screens.base_screen import BaseScreen
+
+from screens.const.screen_constants import START_SCREEN, CHARACTER_SCREEN
 
 
 class LoginScreen(BaseScreen):
@@ -41,7 +42,7 @@ class LoginScreen(BaseScreen):
                     self.context.token = response.get("Authorization")
                     self.context.user = self.login_text
                     return {
-                        "event": "login_success",
+                        "event": CHARACTER_SCREEN,
                         "data": response,
                     }
                 except DefaultResponseError as e:
@@ -54,7 +55,7 @@ class LoginScreen(BaseScreen):
                 self.error = "Login and password required"
 
         elif event.key == pygame.K_ESCAPE:
-            return {"event": "start"}
+            return {"event": START_SCREEN}
 
         else:
             char = event.unicode

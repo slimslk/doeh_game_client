@@ -5,7 +5,7 @@
   "display_settings": {
     "screen_resolution_width": 1200,
     "screen_resolution_height": 800,
-    "screen_font_size": 20,
+    "screen_font_size": 24,
     "game_field_width": 81,
     "game_field_height": 41,
     "game_field_font_size": 14
@@ -82,37 +82,6 @@
     "q": {
       "action": "awake",
       "params": []
-    },
-    "m": {
-      "action": "move_up",
-      "params": [
-        2,
-        2
-      ]
-    },
-    "v": {},
-    "x": {
-      "action": "move",
-      "params": [
-        1,
-        1
-      ]
-    },
-    "b": {
-      "action": "move_up"
-    },
-    "c": {
-      "action": "move_up",
-      "params": [
-        1
-      ]
-    },
-    "n": {
-      "action": "ove_up",
-      "params": [
-        1,
-        2
-      ]
     }
   }
 }

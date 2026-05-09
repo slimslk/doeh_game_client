@@ -1,0 +1,7 @@
+LOGIN_SCREEN = "login"
+LOGOUT_SCREEN = "logout"
+GAME_SCREEN = "game"
+CONNECT_SCREEN = "connect"
+CHARACTER_SCREEN = "char_screen"
+REGISTER_SCREEN = "register"
+START_SCREEN = "start"
