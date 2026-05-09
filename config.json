@@ -82,6 +82,7 @@
     "q": {
       "action": "awake",
       "params": []
-    }
+    },
+    "i": {"action": "inventory" }
   }
 }

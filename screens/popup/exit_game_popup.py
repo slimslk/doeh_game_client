@@ -52,6 +52,9 @@ class DeathPopupScreen(DefaultPopupScreen):
             _, action_key = self.buttons[self._selected]
             return action_key
 
+        elif event.key == pygame.K_ESCAPE:
+            return "return"
+
         return None
 
     def draw(self):

@@ -7,7 +7,6 @@ from screens.base_screen import BaseScreen
 from core.config.config import game_field_width, game_field_height, key_mapping, game_field_font_size, screen_font_size
 
 from screens.popup.popup_factory import PopupFactory
-from screens.popup import death_screen_popup, exit_game_popup, inventory_popup
 from screens.const.screen_constants import LOGOUT_SCREEN, CHARACTER_SCREEN
 
 
@@ -34,33 +33,31 @@ class GameScreen(BaseScreen):
         self.popup_manager = self.context.popup_manager
 
     def handle_event(self, event):
-        if event.type == pygame.KEYDOWN and event.unicode == "i":
-            self.open_inventory_popup()
-
         if self.player.is_dead and not self.popup_manager.is_active():
             self.open_death_popup()
 
         if self.popup_manager.is_active():
             action = self.popup_manager.handle_event(event)
             if action:
-                if action in (LOGOUT_SCREEN, CHARACTER_SCREEN):
-                    self.popup_manager.close()
-                    return {"event": action}
                 self.popup_manager.close()
-
+                if action in (LOGOUT_SCREEN, CHARACTER_SCREEN):
+                    return {"event": action}
         else:
             action = controller.handle_event(event)
-
-        if action == "exit":
-            self.open_exit_game_popup()
         if action and isinstance(action, dict):
-            self.context.ws.send(action)
+            if "inventory" == action.get("action"):
+                self.open_inventory_popup()
+            elif "exit" == action.get("action"):
+                self.open_exit_game_popup()
+            else:
+                self.context.ws.send(action)
 
     def open_inventory_popup(self):
-        inventory_popup = PopupFactory.create("inventory", self.screen,
-                                              font=self.font,
-                                              inventory=self.player.inventory)
-        self.popup_manager.open(inventory_popup)
+        inv_popup = PopupFactory.create("inventory", self.screen,
+                                        font=self.font,
+                                        inventory=self.player.inventory,
+                                        text_color=self._SCREEN_FONT_COLOR)
+        self.popup_manager.open(inv_popup)
 
     def open_death_popup(self):
         popup_dead = PopupFactory.create("dead", self.screen, font=self.font)
@@ -75,7 +72,7 @@ class GameScreen(BaseScreen):
         px, py = self.player.position
 
         # --- Top status line ---
-        top_text = f"Player: {self.player.name} || Inventory: {'|'.join(self.player.inventory)}"
+        top_text = f"Player: {self.player.name}"
         top_surface = self.font.render(top_text, True, self._SCREEN_FONT_COLOR)
         self.screen.blit(top_surface, (screen_font_size, 5))
 
@@ -132,11 +129,11 @@ class GameScreen(BaseScreen):
                       f" AM: {self.player.attack_modifier}"
                       f" AD: {self.player.attack_damage}"
                       f" DEF: {self.player.defence}")
-        stats_surface = self.font.render(stats_text, True, (255, 255, 0))
+        stats_surface = self.font.render(stats_text, True, self._SCREEN_FONT_COLOR)
         self.screen.blit(stats_surface, (0, top_surface.get_height() + self._UI_OFFSET * 2 +
                                          self.display_map_height * (self.game_field_font_size + padding)))
         message_test = f"{self.player.messages[-1]}"
-        message_surface = self.font.render(message_test, True, (255, 255, 0))
+        message_surface = self.font.render(message_test, True, self._SCREEN_FONT_COLOR)
         self.screen.blit(message_surface, (0, top_surface.get_height() + self._UI_OFFSET * 2 +
                                            self.display_map_height * (self.game_field_font_size + padding) +
                                            stats_surface.get_height()))

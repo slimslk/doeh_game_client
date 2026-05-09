@@ -20,6 +20,7 @@ from screens.start_screen import StartScreen
 
 from core.config.config import screen_resolution_width, screen_resolution_height
 import screens.const.screen_constants as s_const
+from screens.popup import death_screen_popup, exit_game_popup, inventory_popup
 
 running = True
 
